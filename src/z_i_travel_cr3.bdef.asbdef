@@ -1,0 +1,57 @@
+managed;
+//strict ( 2 ); //Uncomment this line in order to enable strict mode 2. The strict mode has two variants (strict(1), strict(2)) and is prerequisite to be future proof regarding syntax and to be able to release your BO.
+
+define behavior for Z_I_TRAVEL_CR3 alias Travel
+implementation in class zbp_i_travel_cr3 unique
+persistent table ztb_travel_mb3
+lock master
+authorization master ( instance )
+etag master last_changed_at
+{
+  create;
+  update;
+  delete;
+
+  //Con esto definimos los campos que solo van a ser de lectura y no se pueden modificar
+  field ( readonly ) last_changed_at, last_changed_by, created_at, created_by;
+  //Los campos obligatorio a completar cuando se crea
+  //Se agrega create para indicar que es obligatorio al momento de crear
+  field ( mandatory : create ) agency_id, overall_status, booking_fee, currency_code;
+  field ( features : instance ) travel_id;
+
+  //Boton y logica de createTravelBytemplate
+  action createTravelBytemplate result [1] $self;
+
+  //Validaciones
+  validation validateCustomer on save  { create; field customer_id; }
+
+  association _Booking { create; }
+}
+
+define behavior for Z_I_BOOKING_CR3 alias Booking
+persistent table ztb_booking_mb3
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master last_change_at
+{
+  update;
+  delete;
+  field ( readonly ) travel_id;
+  field ( mandatory : create ) carrier_id, connection_id, flight_date, booking_status;
+  association _Travel;
+  association _BookingSupplement { create; }
+}
+
+define behavior for Z_I_BOOKSUPPL_CR3 alias Supplement
+persistent table ztb_booksupp_mb3
+lock dependent by _Travel
+authorization dependent by _Travel
+etag master last_changed_at
+{
+  update;
+  delete;
+  field ( readonly ) travel_id, booking_id;
+  field ( mandatory : create ) supplement_id, price;
+  association _Travel;
+  association _Booking;
+}

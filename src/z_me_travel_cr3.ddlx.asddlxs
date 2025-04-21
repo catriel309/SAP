@@ -1,0 +1,104 @@
+@Metadata.layer: #CORE
+@Search.searchable: true
+
+@UI: {
+
+headerInfo: {
+    typeName: 'ME Header Travel ',
+    typeNamePlural: 'ME Header Travels',
+    title: {
+        type: #STANDARD,
+        value: 'TravelId'
+    }
+ }
+}
+
+
+
+annotate view Z_C_TRAVEL_CR3 with
+
+{
+  @UI.facet: [
+     {
+      id: 'Travel',
+      purpose: #STANDARD,
+      position: 10,
+      label: 'ME facet Travel',
+      type: #IDENTIFICATION_REFERENCE
+     },
+     {
+      id: 'Booking',
+      purpose: #STANDARD,
+      position: 20,
+      label: 'ME facet Booking',
+      type: #LINEITEM_REFERENCE,
+      targetElement: '_Booking'
+     }
+  ]
+
+  @UI: {
+     lineItem: [ { position: 10, importance: #HIGH }],
+     identification: [{ position: 10, label: 'ME LINEITEM Travel Id [1,...,99999999]' }]}
+  @Search.defaultSearchElement: true
+  TravelId;
+
+  @UI: {
+      lineItem: [ { position: 20, importance: #HIGH } ],
+      identification: [ { position: 20 } ],
+      selectionField: [ { position: 20 } ] }
+  @Consumption.valueHelpDefinition: [{ entity : {name: '/DMO/I_Agency', element: 'AgencyID' } }]
+  AgencyId;
+
+
+  @UI: {
+      lineItem: [ { position: 30, importance: #HIGH } ],
+      identification: [ { position: 30 } ],
+      selectionField: [ { position: 30 } ] }
+  @Consumption.valueHelpDefinition: [{ entity : {name: '/DMO/I_Customer', element: 'CustomerID' } }]
+  @Search.defaultSearchElement: true
+  CustomerId;
+
+
+  @UI: {
+      lineItem: [ { position: 40, importance: #MEDIUM } ],
+      identification: [ { position: 40 } ] }
+  BeginDate;
+
+
+  @UI: {
+      lineItem: [ { position: 41, importance: #MEDIUM } ],
+      identification: [ { position: 41 } ] }
+  EndDate;
+
+
+  @UI: {
+      identification: [ { position: 42 } ] }
+  BookingFee;
+
+
+  @UI: {
+      lineItem: [ { position: 43, importance: #MEDIUM }],
+      identification: [ { position: 43, label: 'ME LINEITEM Total Price' } ] }
+  TotalPrice;
+
+  @Consumption.valueHelpDefinition: [{entity: {name: 'I_Currency', element: 'Currency' }}]
+  CurrencyCode;
+
+
+  @UI: {
+      identification:[ { position: 46 } ] }
+  Description;
+
+
+  @UI: {
+      lineItem: [ { position: 50, importance: #HIGH },
+      { type: #FOR_ACTION, dataAction: 'createTravelBytemplate', label: 'ME LINEITEM Create Template' } ],
+      identification: [ { position: 45, label: 'ME LINEITEM Status [O, A, X]' } ] }
+  TravelStatus;
+
+
+  @UI.hidden: true
+  LastChangedAt;
+
+
+}
