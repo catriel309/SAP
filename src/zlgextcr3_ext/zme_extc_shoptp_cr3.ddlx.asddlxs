@@ -1,0 +1,18 @@
+@Metadata.layer: #CUSTOMER
+annotate entity ZLG_EXTC_ShopTP_CR3
+    with 
+{
+  @UI.lineItem: [ {
+    position: 21 , 
+    importance: #HIGH, 
+    label: 'Item Status'
+  } ]
+  @UI.identification: [ {
+    position: 21 , 
+    label: 'Item Status'
+  } ]
+  @UI.selectionField: [ {
+    position: 21 
+  } ]
+  zzstatuszaa;
+}
